@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Textová hra</title>
+</head>
+<body>
+  <h1>Příjmení: NOVÁK</h1>
+
+  <h2>Tipni si číslo (1–5)</h2>
+
+  <input id="guess" type="number" min="1" max="5">
+  <button onclick="play()">Hrát</button>
+
+  <p id="result"></p>
+  <h3>Score: <span id="score">0</span></h3>
+
+  <script>
+    async function play() {
+      const guess = Number(document.getElementById("guess").value);
+
+      if (guess < 1 || guess > 5) {
+        alert("Zadej číslo od 1 do 5");
+        return;
+      }
+
+      const response = await fetch("/api/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ guess })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").innerText = data.message;
+      document.getElementById("score").innerText = data.score;
+    }
+  </script>
+</body>
+</html>
